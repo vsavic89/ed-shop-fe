@@ -1,7 +1,11 @@
 <template>
     <div>                              
         <div v-if="products.length > 0" class="products">
-            <div v-for="(product, index) in products" :key="index">                
+            <div id="findProduct">
+                <label for="filter">Find product by title: </label>
+                <input type="text" name="filter" v-model="searchTerm" placeholder="(type here)"/>
+            </div>
+            <div v-for="(product, index) in filteredProducts" :key="index">                
                 <div class="product">
                     <img :src="product.image" />
                     <div class="title">
@@ -17,18 +21,27 @@
                         <button @click="addToCart(index)">Add to Cart</button>
                     </div>
                 </div>
-            </div>
-        </div>                    
+            </div>            
+        </div>    
+        <errors-handler 
+            :errors="showErrors"
+        />                        
     </div>
 </template>
 <script>
 import { productsService } from '../services/products.service';
 import { mapActions } from 'vuex';
+import ErrorsHandler from './ErrorsHandler';
 export default {
+    name: "Shop",        
+    components: {
+      ErrorsHandler
+    },
     data() {
         return {
             products: [],
-            errors: [],            
+            errors: [], 
+            searchTerm: ''           
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -48,15 +61,24 @@ export default {
         ...mapActions({
             addItemToCart: 'addToCart'
         }),
-        addToCart(productID){                       
+        addToCart(productID){                                            
             this.addItemToCart({                    
                     item: this.products[productID]
-                }).then(() => {                                                      
+                }).then(() => {                           
+                    this.$emit("animate");                                                           
                 }).catch(e => {                    
                    this.errors.push(e.response);
-            });
+            });            
         },
-    },    
+    },  
+    computed: {
+        showErrors(){
+            return this.errors;
+        },
+        filteredProducts(){
+            return this.products.filter(product => product.title.toLowerCase().includes(this.searchTerm.toLowerCase()));
+        },
+    },  
 }
 </script>
 <style>    
@@ -145,4 +167,22 @@ export default {
         border-radius: 4px;
         font-weight: bold;
     }
+#findProduct {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom:20px;
+}
+#findProduct input[type=text] {
+  width:40%;
+  height: 30px;  
+  padding: 0;
+  margin: 0;
+  background-color: white;  
+  background-image: url('../assets/searchicon.png');
+  background-position: 0;
+  background-repeat: no-repeat;
+  padding-left: 40px;
+  border: 2px solid #B52F8F;
+}
 </style>

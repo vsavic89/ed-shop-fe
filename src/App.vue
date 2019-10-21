@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    
+    <Shop @animate="setAnimate" />         
+    
     <div id="nav">
       <div id="header">
         <div id="logo">
@@ -11,9 +14,12 @@
         </div>         
         <div id="shop" :class="isActive('/shop')">
           <router-link to="/shop" v-on:click.native="showCart = false">Shop</router-link>
-        </div>        
+        </div>                
       </div>    
-    </div>        
+    </div>  
+    <div v-if="animate">
+      <hr>
+    </div>      
     <!-- shopping cart -->
     <transition name="fade">      
       <div v-if="showCart" class="shopping-cart">        
@@ -40,16 +46,22 @@
       <div id="footer">
         <p>&copy; {{ getYear() }} Vladimir Savic</p>
       </div>
-    </div>     
-  </div>
+    </div>             
+  </div>  
 </template>
 <script>
 import moment from 'moment';
 import { mapGetters } from 'vuex';
+import Shop from './components/Shop';
 export default {
+  name: "App",
+  components: {
+    Shop
+  },
   data(){
     return {
-      showCart: false
+      showCart: false,
+      animate: false,      
     }
   },
   methods : {
@@ -64,13 +76,17 @@ export default {
     },  
     showShoppingCart(){      
       this.showCart = !this.showCart;
+    },
+    setAnimate(){      
+      this.animate = true;
+      console.log(this.animate);
     }
   },
   computed: {
         ...mapGetters({
             cart: "getCart"
-        })
-  } 
+    }),    
+  },
 }
 </script>
 <style>

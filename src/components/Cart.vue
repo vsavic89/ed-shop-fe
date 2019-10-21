@@ -24,38 +24,55 @@
                 </div> 
                 <div id="total">
                     <p class="total">Total</p>
-                    <p class="price">{{ getSum(cart) + '$' }}</p>
+                    <p class="price">{{ getSum(cart) + '$' }}</p>                                        
+                </div>
+                <div id="removeAll">
+                    <button @click="removeItem(-1)">Remove All</button>                
                 </div>
             </div>
             <div v-else>
                 <h3>is empty!</h3>
-            </div>
+            </div>            
         </div>
+        <errors-handler  
+            :errors="showErrors"
+        />
     </div>    
 </template>
 <script>
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
+import ErrorsHandler from './ErrorsHandler';
 export default {
+    name: "Cart",
+    components: {
+        ErrorsHandler
+    },
     data(){
         return {
-            
+            errors: []
         }
     },
     computed: {
             ...mapGetters({
                 cart: "getCart"
-        })
+        }),
+        showErrors(){
+            return this.errors;
+        }    
     },
     methods: {
         ...mapActions({
                 removeItemFromCart: 'removeItem'
         }),
-        removeItem(index){
-            this.removeItemFromCart(index).then(() => {                                                    
+        removeItem(index){            
+            var r = confirm("Are you sure?");
+            if (r == true) {                
+                this.removeItemFromCart(index).then(() => {                                                    
                     }).catch(e => {                    
                     this.errors.push(e.response);
                 });
+            }            
         },
         getSum(cart){
             let total = 0;
@@ -65,7 +82,7 @@ export default {
             }
             return total;
         }
-    },
+    },    
 }
 </script>
 <style>
@@ -103,7 +120,7 @@ div p.cart-product-price{
     font-size: 27px;
     font-weight: bold;
 }
-div.col3 button {
+div.col3 button, #removeAll button {
   margin-top: 10px;  
   background: none!important;
   border: none;
@@ -127,5 +144,16 @@ div.col3 button {
     font-size: 32px;
     font-weight: bold;
     color: #28057F;
+}
+#removeAll {
+    clear:both;
+    float:right; 
+           
+}
+#removeAll button{
+    font-size: 24px;
+    margin: 0;
+    padding: 0;
+    text-decoration: underline;
 }
 </style>

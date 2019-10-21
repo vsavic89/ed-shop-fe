@@ -13,6 +13,10 @@ export const CartModule = {
     removeItemFromCart(state, payload){
       state.cart.splice(payload, 1);
       window.localStorage.setItem('cart', JSON.stringify(state.cart));
+    },
+    emptyCart(state){
+      state.cart = [];
+      window.localStorage.setItem('cart', JSON.stringify(state.cart));
     }
   },
   actions: {
@@ -20,7 +24,11 @@ export const CartModule = {
       context.commit('addItemToCart', item);
     },
     removeItem(context, index){
-      context.commit('removeItemFromCart', index);
+      if (index === -1){        
+          context.commit('emptyCart');
+      }else{
+        context.commit('removeItemFromCart', index);
+      }
     }
   },
   getters: {
