@@ -1,8 +1,7 @@
 <template>
-    <div>     
-        
-        <div id="content" v-if="products.length > 0">            
-            <div v-for="(product, index) in products" :key="index" class="products">                
+    <div>                              
+        <div v-if="products.length > 0" class="products">
+            <div v-for="(product, index) in products" :key="index">                
                 <div class="product">
                     <img :src="product.image" />
                     <div class="title">
@@ -19,7 +18,7 @@
                     </div>
                 </div>
             </div>
-        </div>             
+        </div>                    
     </div>
 </template>
 <script>
@@ -33,8 +32,8 @@ export default {
         }
     },
     beforeRouteEnter (to, from, next) {
-        next(vm => {            
-            vm.getProducts();
+        next(vm => {                        
+            vm.getProducts();            
         })
     },
     methods: {
@@ -52,20 +51,24 @@ export default {
         addToCart(productID){                       
             this.addItemToCart({                    
                     item: this.products[productID]
-                }).then(() => {
-                    //alert('An item is added to the cart!');                                  
+                }).then(() => {                                                      
                 }).catch(e => {                    
                    this.errors.push(e.response);
             });
-        }
+        },
     },    
 }
 </script>
 <style>    
-    #content {    
-        clear: both;                                    
+    #content {            
+        width:100%;         
+        position: absolute; 
+        background-color: #f2f2f2;               
+    }
+    #content div.products {
+        padding-top: 30px;
         width:65%;
-        margin: 20px auto;         
+        margin: 0 auto;
     }
     #content h1,h2,h3{    
         text-align: center;          

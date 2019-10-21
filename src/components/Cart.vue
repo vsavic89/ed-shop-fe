@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div id="content">
+    <div>     
+        <div class="products">   
             <h1>Your Cart</h1>
             <div v-if="cart.length > 0">
                 <div v-for="(item, index) in cart" :key="index">                    
@@ -31,7 +31,7 @@
                 <h3>is empty!</h3>
             </div>
         </div>
-    </div>
+    </div>    
 </template>
 <script>
 import { mapGetters } from 'vuex';
@@ -52,8 +52,7 @@ export default {
                 removeItemFromCart: 'removeItem'
         }),
         removeItem(index){
-            this.removeItemFromCart(index).then(() => {
-                    //  alert('An item is added to the cart!');                                  
+            this.removeItemFromCart(index).then(() => {                                                    
                     }).catch(e => {                    
                     this.errors.push(e.response);
                 });
