@@ -22,7 +22,9 @@
             <div class="item">
               <img :src="product.image" />
               <p>{{ product.title }}</p>
-              <hr>
+              <span v-if="index !== cart.length-1">
+                <hr>
+              </span>
             </div>
           </div>
           <router-link to="/cart"><button @click="showShoppingCart()">Go to Checkout</button></router-link>            
@@ -98,7 +100,7 @@ export default {
   margin-left: 30px;
   padding: 21px 0 0 60px;    
 }
-#nav #header #shop {
+#nav #header #shop {  
   float: right;  
   width: 66px;  
   height: auto;
@@ -108,10 +110,14 @@ export default {
   padding-bottom: 25px;
   padding-left: 10px; 
 }
-#nav #header #cart {   
+#nav #header #cart {     
+  width: 60px;  
   float:right;    
-  padding: 28px 0 15px 0;    
-  margin-right: 85px;  
+  padding: 28px 0 15px 10px;    
+  margin-right: 70px;  
+}
+#nav #header #cart img{   
+  margin:0;
 }
 #nav #shop a {
   color: white;
@@ -143,13 +149,13 @@ export default {
 }
 .shopping-cart {  
   z-index: 1000;
-  margin: -15px 80px;
+  margin: -15px 82px;
   float: right;
   background: white;
   width: 246px;
   position: relative;
   border-radius: 10px;
-  padding: 20px;
+  padding: 10px;
 }  
 .shopping-cart:after {
 	bottom: 100%;
@@ -191,6 +197,7 @@ export default {
   margin:10px;
   width: 51px;
   height: 31px;
+  border-radius: 5px;
 }
 hr {
   clear:both;
@@ -198,6 +205,9 @@ hr {
   background-color: #f2f2f2;
   border: 0;
   background: linear-gradient(90deg, #868686 0%,  #f2f2f2 130% );
+}
+.item hr {
+  width: 90%;
 }
 .item p {
   float:left;  
