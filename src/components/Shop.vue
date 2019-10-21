@@ -2,7 +2,7 @@
     <div>                              
         <div v-if="products.length > 0" class="products">
             <div id="findProduct">
-                <label for="filter">Find product by title: </label>
+                <label for="filter">Find product by title or description: </label>
                 <input type="text" name="filter" v-model="searchTerm" placeholder="(type here)"/>
             </div>
             <div v-for="(product, index) in filteredProducts" :key="index">                
@@ -76,7 +76,11 @@ export default {
             return this.errors;
         },
         filteredProducts(){
-            return this.products.filter(product => product.title.toLowerCase().includes(this.searchTerm.toLowerCase()));
+            return this.products.filter(product => 
+                (product.title.toLowerCase().includes(this.searchTerm.toLowerCase()))                
+                ||
+                (product.description.toLowerCase().includes(this.searchTerm.toLowerCase()))
+            );
         },
     },  
 }
