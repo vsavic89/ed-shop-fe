@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Shop from '../components/Shop'
 import Cart from '../components/Cart'
+import SingleProduct from '../components/SingleProduct'
 
 Vue.use(VueRouter)
 
@@ -9,8 +10,7 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: '/shop'
-    // component: App
+    redirect: '/shop'    
   },
   {
     path: '/shop',
@@ -21,6 +21,11 @@ const routes = [
     path: '/cart',
     name: 'cart',
     component: Cart
+  },
+  {
+    path: '/products/:id',
+    name: 'SingleProduct',
+    component: SingleProduct
   }
 ]
 

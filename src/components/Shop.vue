@@ -1,15 +1,15 @@
 <template>
-    <div>                              
-        <div v-if="products.length > 0" class="products">
+    <div>                                                                    
+        <div v-if="products.length > 0" class="products">                      
             <div id="findProduct">
                 <label for="filter">Find product by title or description: </label>
                 <input type="text" name="filter" v-model="searchTerm" placeholder="(type here)"/>
-            </div>
-            <div v-for="(product, index) in filteredProducts" :key="index">                
+            </div>            
+            <div v-for="(product, index) in filteredProducts" :key="index">                 
                 <div class="product">
                     <img :src="product.image" />
                     <div class="title">
-                        <p>{{ product.title }}</p>
+                        <p><router-link :to="'products/'+product.id">{{ product.title }}</router-link></p>
                     </div>
                     <div class="price">
                         <p>{{ product.price + '$' }}</p>
@@ -25,7 +25,7 @@
         </div>    
         <errors-handler 
             :errors="showErrors"
-        />                        
+        />                                
     </div>
 </template>
 <script>
@@ -35,42 +35,16 @@ import ErrorsHandler from './ErrorsHandler';
 export default {
     name: "Shop",        
     components: {
-      ErrorsHandler
+      ErrorsHandler,      
     },
     data() {
         return {
             products: [],
             errors: [], 
-            searchTerm: ''           
+            searchTerm: '',
+            productsS: [] //productsList from $store                   
         }
     },
-    beforeRouteEnter (to, from, next) {
-        next(vm => {                        
-            vm.getProducts();            
-        })
-    },
-    methods: {
-        getProducts(){            
-            productsService.getAll()
-                .then(response => {                   
-                    this.products = response.data;                                             
-                }).catch(e => {
-                    this.errors.push(e);
-                })
-        },
-        ...mapActions({
-            addItemToCart: 'addToCart'
-        }),
-        addToCart(productID){                                            
-            this.addItemToCart({                    
-                    item: this.products[productID]
-                }).then(() => {                           
-                    this.$emit("animate");                                                           
-                }).catch(e => {                    
-                   this.errors.push(e.response);
-            });            
-        },
-    },  
     computed: {
         showErrors(){
             return this.errors;
@@ -83,6 +57,49 @@ export default {
             );
         },
     },  
+    beforeRouteEnter (to, from, next) {
+        next(vm => {                        
+            vm.getProducts();            
+        })
+    },
+    methods: {
+        getProducts(){     
+            this.productsS = this.getProductsList();                    
+            if(this.productsS.length === 0){
+                productsService.getAll()
+                    .then(response => {                   
+                        this.products = response.data;  
+                        this.addProductItems(this.products).then(() => {                         
+                            this.productsS = this.getProductsList();                                                                                                                            
+                        }).catch(e => {
+                            this.errors.push(e.response);
+                        })                                                                                   
+                    }).catch(e => {
+                        this.errors.push(e);
+                    })
+            }else{                
+                this.products = this.productsS;                
+            }
+            
+        },
+        getProductsList(){         
+            return this.$store.getters.getProducts;
+        },
+        ...mapActions({
+            addItemToCart: 'addToCart',
+            addProductItems: 'addProducts',
+            stAnimate: 'setAnimate'
+        }),
+        addToCart(productID){                                            
+            this.addItemToCart({                    
+                    item: this.products[productID]
+                }).then(() => {            
+                    this.$store.commit('stAnimate');                                         
+                }).catch(e => {                    
+                   this.errors.push(e.response);
+            });            
+        },
+    }, 
 }
 </script>
 <style>    

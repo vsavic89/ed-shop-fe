@@ -24,7 +24,7 @@
                 </div> 
                 <div id="total">
                     <p class="total">Total</p>
-                    <p class="price">{{ getSum(cart) + '$' }}</p>                                        
+                    <p class="price">{{ getSum(cart) + '$'}}</p>                                        
                 </div>
                 <div id="removeAll">
                     <button @click="removeItem(-1)">Remove All</button>                
@@ -75,10 +75,10 @@ export default {
             }            
         },
         getSum(cart){
-            let total = 0;
+            var total = 0.00;
             for(let i=0; i < cart.length; i++)   
             {                             
-                total += cart[i].price;
+                total += parseFloat(cart[i].price);
             }
             return total;
         }

@@ -1,25 +1,19 @@
 <template>
-  <div id="app">
-    
-    <Shop @animate="setAnimate" />         
-    
+  <div id="app">               
     <div id="nav">
       <div id="header">
         <div id="logo">
           <a href="https://www.etondigital.com/"><img class="logo" src="./assets/logo.png" alt="Eton Digital" /></a>
-        </div>      
-        <div id="cart" :class="isActive('/cart')">                                           
-              <img v-on:click="showCart = !showCart" class="cart" src="./assets/cart.png" alt="Cart" style="cursor:pointer;"/>
-              <span v-if="cart.length > 0" class="badge">{{cart.length}}</span>            
-        </div>         
+        </div>          
+          <div id="cart" :class="isActive('/cart')">                                                       
+                <img v-on:click="showCart = !showCart" v-bind:class="{'cart-img': compare()}" src="./assets/cart.png" alt="Cart" style="cursor:pointer;"/>
+                <span v-if="cart.length > 0" class="badge">{{cart.length}}</span>            
+          </div>         
         <div id="shop" :class="isActive('/shop')">
           <router-link to="/shop" v-on:click.native="showCart = false">Shop</router-link>
         </div>                
       </div>    
-    </div>  
-    <div v-if="animate">
-      <hr>
-    </div>      
+    </div>         
     <!-- shopping cart -->
     <transition name="fade">      
       <div v-if="showCart" class="shopping-cart">        
@@ -52,19 +46,18 @@
 <script>
 import moment from 'moment';
 import { mapGetters } from 'vuex';
-import Shop from './components/Shop';
 export default {
   name: "App",
-  components: {
-    Shop
-  },
   data(){
     return {
-      showCart: false,
-      animate: false,      
+      showCart: false,                 
     }
   },
   methods : {
+    compare(){                 
+       var temp = this.$store.getters.getAnimate; 
+       return temp;
+    },
     getYear(){
       return moment(new Date()).format('YYYY');
     },
@@ -76,15 +69,11 @@ export default {
     },  
     showShoppingCart(){      
       this.showCart = !this.showCart;
-    },
-    setAnimate(){      
-      this.animate = true;
-      console.log(this.animate);
-    }
+    },   
   },
   computed: {
         ...mapGetters({
-            cart: "getCart"
+            cart: "getCart",                                              
     }),    
   },
 }
@@ -114,7 +103,8 @@ export default {
   float: left;
   width: 20%;  
   margin-left: 30px;
-  padding: 21px 0 0 60px;    
+  padding: 21px 0 0 60px;  
+  animation: right_to_left 3s ease;  
 }
 #nav #header #shop {  
   float: right;  
@@ -127,11 +117,21 @@ export default {
   padding-left: 10px; 
 }
 #nav #header #cart {     
-  width: 60px;  
+  width: 80px;  
   float:right;    
-  padding: 28px 0 15px 10px;    
-  margin-right: 70px;  
+  padding: 28px 0 15px 40px;    
+  margin-right: 90px;      
 }
+
+@keyframes right_to_left {
+  from {
+    margin-left: 100%;
+  }
+  to {
+    margin-left: 2%;
+  }
+}
+
 #nav #header #cart img{   
   margin:0;
 }
@@ -175,7 +175,7 @@ export default {
 }  
 .shopping-cart:after {
 	bottom: 100%;
-	left: 90%;
+	left: 75%;
 	border: solid transparent;
 	content: " ";
 	height: 0;
@@ -229,5 +229,16 @@ hr {
   float:left;  
   font-size: 14px;
   font-weight: bold;
+}
+.cart-img {
+  animation: right_to_left_img 2s ease;
+}
+@keyframes right_to_left_img {
+  from {
+    margin-left: 10px;
+  }
+  to {
+    margin-left: 0;
+  }
 }
 </style>
